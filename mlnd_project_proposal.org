@@ -46,7 +46,7 @@
     Both model must achieve comparable performance to the Vgg19-T4SA-F and Vgg19-T4SA-A. The accuracy on TTD and B-T4SA should be within 5% of the accuracy of the baseline models. We expect the new models to have a better accuracy and performance than the baseline models.
 
 *** Benchmark Model
-    We use the  Vgg19-T4SA-F and Vgg19-T4SA-A models that we constructed based on the methods outlined in T4SA [[http://openaccess.thecvf.com/content_ICCV_2017_workshops/papers/w5/Vadicamo_Cross-Media_Learning_for_ICCV_2017_paper.pdf][paper]] as benchmark models.
+    We use the  Vgg19-T4SA-F and Vgg19-T4SA-A models that we constructed based on the methods outlined in T4SA [[http://openaccess.thecvf.com/content_ICCV_2017_workshops/papers/w5/Vadicamo_Cross-Media_Learning_for_ICCV_2017_paper.pdf][paper]] as benchmark models for score and performance metrics.
     
     We compare the score and performance of our models namely InceptionV3-T4SA-F, InceptionV3-T4SA-A, Mobilenet-T4SA-F, Mobilenet-T4SA-A to that of the baseline models.
     
@@ -64,7 +64,11 @@
     We will use the VGG19 trained on imagenet and finetune all the layers and only fully connected layers on two instances and get Vgg19-T4SA-A and Vgg19-T4SA-F which are set as baseline models. The results from this model will be compared to the results in [[http://www.t4sa.it/][T4SA]] to check if our baseline is correct. They should reach an accuracy as given in table Table1 on the TTD and B-T4SA dataset.
    
     Next we finetune a model based on InceptionV3 architecture trained on imagenet. We finetune two instance of this model, where we finetune FC layers for one of the model and all layers in another. We get two models finetuned on two different set of layers InceptionV3-T4SA-F, InceptionV3-T4SA-A which will be compared with the base model. Similarly we will also finetune a set of models  Mobilenet-T4SA-F, Mobilenet-T4SA-A  based on Mobilenet architecture which will be used in the comparison against the base model.
-
+    
+    We graph the results and present the accuracy, prediction time, number of parameters of InceptionV3-T4SA-F and Mobilenet-T4SA-F as a multiple of Vgg19-T4SA-F and InceptionV3-T4SA-A and Mobilenet-T4SA-A as a multiple of Vgg19-T4SA-A model in three different bar charts.
+    
+    We tabulated the accuracy of Vgg19-T4SA-F, Vgg19-T4SA-A, InceptionV3-T4SA-F, InceptionV3-T4SA-A, Mobilenet-T4SA-F, Mobilenet-T4SA-A on TDD5, TDD4 and TDD3 along with the results from other models listed in the paper at [[https://www.cs.rochester.edu/u/qyou/DeepSent/deepsentiment.html][DeepSent]]
+ 
     It is expected that the InceptionV3 based model to train faster and more accurate than the baseline model. The Mobilenet based model is expected to perform well in memory utilization and in prediction in terms of running time and may have less accuracy than baseline. We will try to tune the Mobilenet model to give as good accuracy as baseline models.
 
 *** Future Work
