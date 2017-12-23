@@ -12,17 +12,17 @@
    This project is based on the paper -- Cross-Media Learning for Image Sentiment Analysis in the Wild by
    Lucia Vadicamo et al. Where they have outlined a method to use cross media learning to train a visual sentiment classifier. This is a first of kind approach where a classifier is trained using data from wild.
 
-   This is a very interesting pioneering effort in the field of visual sentiment classification. We try to replicate their results from the image classification part and then try to improve upon it. We will train models using the latest CNN architectures from imagenet contest namely Inception and Mobilenet and compare their performance (accuracy, number of parameters and prediction speed) to the implementation of original models as described in the research paper. We will also evaluate our models with another human labeled dataset [[https://www.cs.rochester.edu/u/qyou/DeepSent/deepsentiment.htm][DeepSent]] to check if we get comparable accuracy scores listed in their site.
+   This is a very interesting pioneering effort in the field of visual sentiment classification. We try to replicate their results from the image classification part and then try to improve upon it. We will train models using the latest CNN architectures from imagenet contest [[http://www.image-net.org/challenges/LSVRC/][ILSVRC]], namely Inception and Mobilenet and compare their performance (accuracy, number of parameters and prediction speed) to the implementation of original models as described in the research paper. We will also evaluate our models with another human labeled dataset [[https://www.cs.rochester.edu/u/qyou/DeepSent/deepsentiment.htm][DeepSent]] to check if we get comparable accuracy scores listed in their site.
   
 *** Problem Statement
-   We will use the labeled data from the B-T4SA dataset to train our models. We try to replicate the results from the experiment using the architecture described in the paper. It is trained with the downloaded dataset and set as baseline models.
+   We will use the labeled data from the B-T4SA dataset to train our models. We try to replicate the results from the experiment using the architecture described in the paper. It will be trained with the downloaded dataset and set as baseline models.
    
-   We will try to improve upon the result by fine tuning models based on InceptionV3 and Mobilenet architectures trained on imagenet data. We will compare the new models performance (accuracy, prediction time, number of parameters) to the baseline model. All these models will be trained using the same training and validation data and tested against the test set from the downloaded B-T4SA dataset and TDD dataset found at [[https://www.cs.rochester.edu/u/qyou/DeepSent/deepsentiment.htm][DeepSent]].
+   We will try to improve upon the result by fine tuning models based on InceptionV3 and Mobilenet architectures trained on imagenet data. We will compare the new models performance (accuracy, prediction time and number of parameters) to the baseline model. All these models will be trained using the same training and validation data and tested against the test set from the downloaded B-T4SA dataset and TDD dataset found at [[https://www.cs.rochester.edu/u/qyou/DeepSent/deepsentiment.htm][DeepSent]].
 
 *** Datasets and Inputs
     As part of the paper, Lucia Vadicamo et al collected a dataset containing 3 million tweets with text and images. The images are labeled based on the content of the text in the tweet using an accurate classifier which works on text. It is then preprocessed to create a labeled image dataset containing balanced number of images(156,862) for each of the three classes. The dataset is available online and can be downloaded from [[http://www.t4sa.it][T4SA]]
 
-    We use the B-T4SA dataset to train and test our models. The data set consist of images collected from twitter which are labeled as positive, neutral or negative. We have 156,862 images for each category with a total of 470,586 images. This is a balanced dataset which contains equal number of examples from each category.
+    We use the B-T4SA dataset to train and test our models. The data set consist of images collected from twitter which are labeled as positive, neutral or negative using the text content. We have 156,862 images for each category with a total of 470,586 images. This is a balanced dataset which contains equal number of examples from each category.
 
 *** Solution Statement
     We will use a Vgg19 model trained on imagenet and finetune all its layers and call it Vgg19-T4SA-A and only the FC layers and call it Vgg19-T4SA-F. We should check that we achieve an accuracy as listed in the table on B-T4SA test set and on [[https://www.cs.rochester.edu/u/qyou/DeepSent/deepsentiment.htm][DeepSent]] test data which is called Twitter Testing Data, abbreviated as TTD. TTD had 3 sets of data based on the number of workers agreement to the classification. We have TTD 5 where all the 5 workers agreed on a label and it contains data with high confidence. TTD 4 contains samples where 4 workers agreed on the majority label and similarly TTD 3 contains samples where 3 agreed on the majority label. These models and their accuracy scores are used as baseline to test and compare to other models.
@@ -36,7 +36,7 @@
     |              |             |             |             |                |
     |              |             |             |             |                |
     
-    We finetune two models based on InceptionV3 architecture trained imagenet on the B-T4SA dataset. We finetune all layers in model and call in InceptionV3-T4SA-A and only the FC layers in another model and call it InceptionV3-T4SA-F. We finetune two more models based on Mobilenet architecture on all and FC layers and call them Mobilenet-T4SA-A and Mobilenet-T4SA-F respectively
+    We finetune two models based on InceptionV3 architecture trained on imagenet with the B-T4SA training dataset. We finetune all layers in model and call in InceptionV3-T4SA-A and only the FC layers in another model and call it InceptionV3-T4SA-F. We finetune two more models based on Mobilenet architecture on all and FC layers and call them Mobilenet-T4SA-A and Mobilenet-T4SA-F respectively
     
     Both model must achieve comparable performance to the Vgg19-T4SA-F and Vgg19-T4SA-A. The accuracy on TTD and B-T4SA should be within 5% of the accuracy of the baseline models. We expect the new models to have a better accuracy and performance than the baseline models.
 
@@ -47,7 +47,7 @@
 
 *** Evaluation Metrics
     The models are evaluated on the accuracy score they reach on the TTD 5, TTD 4, TTD 3 and B-T4SA test set.
-    We record the prediction time on TTD5 test set to find the model that takes less time in prediction the result. We also compare the number of parameters of each model which acts as surrogate measure for memory usage of the models.
+    We record the prediction time on TTD5 test set to find the model that takes less time in predicting the result. We also compare the number of parameters of each model which acts as surrogate measure for memory usage of the models.
 
     We expect the new models InceptionV3-T4SA-F, InceptionV3-T4SA-A, Mobilenet-T4SA-F, Mobilenet-T4SA-A to be better than baseline models in terms of accuracy and performance metrics we defined.
 
