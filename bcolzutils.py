@@ -2,7 +2,9 @@ import bcolz
 import os
 import time
 import shutil
+import logging
 
+log = logging.getLogger(__name__)
 def bcolz_writer(gen, steps, dirname, progress=False ):
     X = None; y = None
     data_dir = dirname + "_data.bclz"
@@ -54,4 +56,4 @@ def bcolz_data_generator(bclz_data, bclz_labels, batch_size=32, progress=False):
             s = time.time()
             yield bclz_data[i*batch_size : (i+1)*batch_size], bclz_labels[i*batch_size : (i+1)*batch_size]
             if progress and max_range>1:
-                print("bcolz.gen Iteration {i}/{t} took {s:.2f}s".format(i=i, t=max_range, s=(time.time()-s)))
+                log.debug("bcolz.gen Iteration {i}/{t} took {s:.2f}s".format(i=i, t=max_range, s=(time.time()-s)))

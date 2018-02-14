@@ -10,7 +10,8 @@ from util import *
 
 num_classes = 3
 batch_size=256
-percent = 0.005
+#percent = 0.005
+percent = 1
 
 script_start_time = time.time()
 # define function to load train, test, and validation datasets

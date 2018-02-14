@@ -28,9 +28,9 @@ valid_name = basedir + '/valid_data'
 test_name = basedir + '/test_data'
 train_name = basedir +'/train_data'
 
-bnf_valid_name = basedir + 'bottleneck_features_mobilenet_valid'
-bnf_test_name = basedir + 'bottleneck_features_mobilenet_test'
-bnf_train_name = basedir + 'bottleneck_features_mobilenet_train'
+bnf_valid_name = basedir + '/bottleneck_features_mobilenet_valid'
+bnf_test_name = basedir + '/bottleneck_features_mobilenet_test'
+bnf_train_name = basedir + '/bottleneck_features_mobilenet_train'
 
 ## load original bcolz data from disk
 # read from disk and check size
@@ -55,14 +55,14 @@ log.debug(train_labels.shape)
 valid_data_size = valid_data.shape[0]*percent
 test_data_size = test_data.shape[0]*percent
 train_data_size = train_data.shape[0]*percent
-
+"""
 valid_data = valid_data[:int(valid_data_size)]
 valid_labels = valid_labels[:int(valid_data_size)]
 test_data = test_data[:int(test_data_size)]
 test_labels = test_labels[:int(test_data_size)]
 train_data = train_data[:int(train_data_size)]
 train_labels = train_labels[:int(train_data_size)]
-
+"""
 log.debug("loading percentage of original data from disk")
 log.debug(valid_data.shape)
 log.debug(test_data.shape)
@@ -72,7 +72,7 @@ log.debug(valid_labels.shape)
 log.debug(test_labels.shape)
 log.debug(train_labels.shape)
 ## make a generator of loaded data
-batch_size = 128
+batch_size = 256
 valid_data_gen = bcolz_data_generator(valid_data,
                                       valid_labels,
                                       batch_size=batch_size, progress=True)
