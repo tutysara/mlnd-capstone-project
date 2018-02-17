@@ -12,7 +12,7 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense, Reshape
 from keras import regularizers
-from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
+from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger, LearningRateScheduler
 from keras import optimizers
 from keras.applications.mobilenet import MobileNet
 
@@ -21,9 +21,8 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.Session(config = config)
 
-
-#percent = 1
 percent = 0.005
+percent = 1
 
 basedir="/media/hdd/datastore/t4sa"
 valid_name = basedir + '/valid_data'
@@ -38,7 +37,15 @@ num_classes = 3
 epochs = 15
 batch_size = 32
 test_prefix = ""
-decay_rate = 0.1/5
+lr=1e-3
+momentum=0.9
+
+def lr_schedule(epoch):
+    """ divides the lr by 10 every 5 epochs"""
+    n = epoch // 5
+    return lr * (0.1 ** n)
+
+#l1l2 = L1L2Regularizer(l1=0.0, l2=1e-5)
 
 if percent < 1:
     test_prefix = "_test"
@@ -146,7 +153,7 @@ for layer in model.layers:
 
 # COMPILE THE MODEL
 model.compile(loss='categorical_crossentropy',
-              optimizer=optimizers.SGD(lr=1e-3, momentum=0.9, decay=decay_rate),
+              optimizer=optimizers.SGD(lr=lr, momentum=momentum),
               metrics=['accuracy'])
 
 model.summary()
@@ -160,13 +167,14 @@ train_data_gen = bcolz_data_generator(train_data, train_labels, batch_size=batch
 checkpointer = ModelCheckpoint(filepath=full_model_weight_path, verbose=1, save_best_only=True)
 early_stopping = EarlyStopping(monitor='val_loss', patience=2, verbose=1)
 csv_logger = CSVLogger(loss_history_csv_name, append=True, separator=',')
+lrscheduler = LearningRateScheduler(schedule=lr_schedule)
 
 loss_history = model.fit_generator(train_data_gen,
           steps_per_epoch= (1+ train_data_size // batch_size),
           epochs=epochs,
           validation_data=valid_data_gen,
           validation_steps= (1+ valid_data_size // batch_size),
-          callbacks=[early_stopping, checkpointer])
+          callbacks=[early_stopping, checkpointer, csv_logger, lrscheduler])
 
 # loss_history
 log.debug("loss_history\n"+ str(loss_history))
