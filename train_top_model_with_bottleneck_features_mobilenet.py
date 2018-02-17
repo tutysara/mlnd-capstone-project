@@ -16,15 +16,19 @@ sess = tf.Session(config = config)
 
 percent = 1
 #percent = 0.005
+epochs=15
+num_classes = 3
+basedir="/media/hdd/datastore/t4sa"
+batch_size = 8192
+test_result = 'bottleneck_features_mobilenet_result.npz'
+model_path = 'saved_models/weights.best.topmodel.mobilenet.hdf5'
+
 d = datetime.datetime.today()
 log_filename=f"train_topmodel_bottleneck_mobilenet_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}.log"
 
 logging.basicConfig(level='DEBUG', filename= log_filename)
 log = logging.getLogger(__name__)
 log.debug("fit and save mode using bottleneck features")
-
-num_classes = 3
-basedir="/media/hdd/datastore/t4sa"
 
 bnf_valid_name = basedir + '/bottleneck_features_mobilenet_valid'
 bnf_test_name = basedir + '/bottleneck_features_mobilenet_test'
@@ -58,7 +62,6 @@ log.debug(bnf_valid_data_size)
 log.debug(bnf_test_data_size)
 log.debug(bnf_train_data_size)
 
-batch_size = 8192
 bnf_train_gen =bcolz_data_generator(bnf_train_data, bnf_train_labels, batch_size=batch_size)
 bnf_valid_gen =bcolz_data_generator(bnf_valid_data, bnf_valid_labels, batch_size=batch_size)
 bnf_test_gen =bcolz_data_generator(bnf_test_data, bnf_test_labels, batch_size=batch_size)
@@ -95,11 +98,11 @@ top_model.summary()
 
 # fit the model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-checkpointer = ModelCheckpoint(filepath='saved_models/weights.best.topmodel.mobilenet.hdf5', verbose=1, save_best_only=True)
+checkpointer = ModelCheckpoint(filepath=model_path, verbose=1, save_best_only=True)
 early_stopping = EarlyStopping(monitor='val_loss', patience=2, verbose=1)
 top_model.fit_generator(bnf_train_gen,
           steps_per_epoch= (1 + int(bnf_train_data_size // batch_size)),
-          epochs=15,
+          epochs=epochs,
           validation_data=bnf_valid_gen,
           validation_steps= (1 + int(bnf_valid_data_size // batch_size)),
           callbacks=[early_stopping, checkpointer])
@@ -110,7 +113,6 @@ y_true, y_pred = prediction_from_gen(gen=bnf_test_gen,
                                      dirname=bnf_test_name)
 
 # write to disk
-test_result = 'bottleneck_features_mobilenet_result.npz'
 log.debug(y_true.shape)
 log.debug(y_pred.shape)
 np.savez(test_result, y_true=y_true, y_pred=y_pred)
@@ -119,9 +121,9 @@ np.savez(test_result, y_true=y_true, y_pred=y_pred)
 npzfile = np.load(test_result)
 y_true = npzfile['y_true']
 y_pred = npzfile['y_pred']
-print(y_true.shape)
-print(y_pred.shape)
+log.debug(y_true.shape)
+log.debug(y_pred.shape)
 
 # report test accuracy
 test_accuracy = 100*np.sum(np.argmax(y_pred, axis=1)==np.argmax(y_true, axis=1))/len(y_true)
-print('Test accuracy: %.4f%%' % test_accuracy)
+log.debug('Test accuracy: %.4f%%' % test_accuracy)
