@@ -27,12 +27,13 @@ bnf_test_name = basedir + '/bottleneck_features_mobilenet_test'
 bnf_train_name = basedir + '/bottleneck_features_mobilenet_train'
 
 percent = 0.005
-#percent = 1
+percent = 1
 epochs=15
 num_classes = 3
 batch_size = 32
 lr=1e-3
 momentum=0.9
+test_prefix=""
 
 def lr_schedule(epoch):
     """ divides the lr by 10 every 5 epochs"""
