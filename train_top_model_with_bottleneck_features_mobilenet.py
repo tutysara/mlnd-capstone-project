@@ -7,32 +7,39 @@ from util import *
 import logging
 import datetime
 
-
 import tensorflow as tf
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.Session(config = config)
 
-
 percent = 1
 #percent = 0.005
 epochs=15
 num_classes = 3
+batch_size = 32
+
 basedir="/media/hdd/datastore/t4sa"
-batch_size = 8192
-test_result = 'bottleneck_features_mobilenet_result.npz'
-model_path = 'saved_models/weights.best.topmodel.mobilenet.hdf5'
-
-d = datetime.datetime.today()
-log_filename=f"train_topmodel_bottleneck_mobilenet_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}.log"
-
-logging.basicConfig(level='DEBUG', filename= log_filename)
-log = logging.getLogger(__name__)
-log.debug("fit and save mode using bottleneck features")
-
 bnf_valid_name = basedir + '/bottleneck_features_mobilenet_valid'
 bnf_test_name = basedir + '/bottleneck_features_mobilenet_test'
 bnf_train_name = basedir + '/bottleneck_features_mobilenet_train'
+
+if percent < 1:
+    test_prefix = "_test"
+    
+test_result = f'bottleneck_features_mobilenet_result{test_prefix}.npz'
+model_path = f'saved_models/weights.best.topmodel.mobilenet{test_prefix}.hdf5'
+loss_history_csv_name = f'train_top_model_mobilenet_loss_history{test_prefix}.csv'
+
+d = datetime.datetime.today()
+log_filename=f"train_topmodel_bottleneck_mobilenet_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}{test_prefix}.log"
+
+logging.basicConfig(level='DEBUG', filename= log_filename)
+log = logging.getLogger(__name__)
+log.debug("fit and save top mode using bottleneck features")
+log.debug("using top_model_weight_path" + model_path)
+log.debug("using test_result" + test_result)
+log.debug("using loss_history_csv_name" + loss_history_csv_name)
+
 
 ## Read it back from disk and check size
 bnf_valid_data = bcolz.carray(rootdir=f'{bnf_valid_name}_data.bclz', mode='r')
@@ -47,20 +54,32 @@ log.debug(bnf_valid_data.shape)
 log.debug(bnf_test_data.shape)
 log.debug(bnf_train_data.shape)
 
-
 log.debug(bnf_valid_labels.shape)
 log.debug(bnf_test_labels.shape)
 log.debug(bnf_train_labels.shape)
 
-bnf_valid_data_size = bnf_valid_data.shape[0] * percent
-bnf_test_data_size = bnf_test_data.shape[0] * percent
-bnf_train_data_size = bnf_train_data.shape[0] * percent
+bnf_valid_data_size = int(bnf_valid_data.shape[0]*percent)
+bnf_test_data_size = int(bnf_test_data[0]*percent)
+bnf_train_data_size = int(bnf_train_data.shape[0]*percent)
 
+if percent < 1:
+    bnf_valid_data = bnf_valid_data[:bnf_valid_data_size]
+    bnf_valid_labels = bnf_valid_labels[:bnf_valid_data_size]
+    
+    bnf_test_data = bnf_test_data[:bnf_test_data_size]
+    bnf_test_labels = bnf_test_labels[:bnf_test_data_size]
+    
+    bnf_train_data = bnf_train_data[:bnf_train_data_size]
+    bnf_train_labels = bnf_train_labels[:bnf_train_data_size]
 
-log.debug("size of data after taking percentage of original size")
-log.debug(bnf_valid_data_size)
-log.debug(bnf_test_data_size)
-log.debug(bnf_train_data_size)
+log.debug("loading percentage of original data from disk")
+log.debug(bnf_valid_data.shape)
+log.debug(bnf_test_data.shape)
+log.debug(bnf_train_data.shape)
+
+log.debug(bnf_valid_labels.shape)
+log.debug(bnf_test_labels.shape)
+log.debug(bnf_train_labels.shape)
 
 bnf_train_gen =bcolz_data_generator(bnf_train_data, bnf_train_labels, batch_size=batch_size)
 bnf_valid_gen =bcolz_data_generator(bnf_valid_data, bnf_valid_labels, batch_size=batch_size)
