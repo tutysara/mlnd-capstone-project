@@ -7,21 +7,37 @@ from util import *
 import logging
 import datetime
 
+
+import keras.backend as K
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
+from keras.layers import Activation, Dropout, Flatten, Dense, Reshape
+from keras import regularizers
+from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger, LearningRateScheduler
+from keras import optimizers
+
 import tensorflow as tf
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.Session(config = config)
 
-percent = 1
-#percent = 0.005
-epochs=15
-num_classes = 3
-batch_size = 32
-
 basedir="/media/hdd/datastore/t4sa"
 bnf_valid_name = basedir + '/bottleneck_features_mobilenet_valid'
 bnf_test_name = basedir + '/bottleneck_features_mobilenet_test'
 bnf_train_name = basedir + '/bottleneck_features_mobilenet_train'
+
+percent = 0.005
+#percent = 1
+epochs=15
+num_classes = 3
+batch_size = 32
+lr=1e-3
+momentum=0.9
+
+def lr_schedule(epoch):
+    """ divides the lr by 10 every 5 epochs"""
+    n = epoch // 5
+    return lr * (0.1 ** n)
 
 if percent < 1:
     test_prefix = "_test"
@@ -59,7 +75,7 @@ log.debug(bnf_test_labels.shape)
 log.debug(bnf_train_labels.shape)
 
 bnf_valid_data_size = int(bnf_valid_data.shape[0]*percent)
-bnf_test_data_size = int(bnf_test_data[0]*percent)
+bnf_test_data_size = int(bnf_test_data.shape[0]*percent)
 bnf_train_data_size = int(bnf_train_data.shape[0]*percent)
 
 if percent < 1:
@@ -86,12 +102,6 @@ bnf_valid_gen =bcolz_data_generator(bnf_valid_data, bnf_valid_labels, batch_size
 bnf_test_gen =bcolz_data_generator(bnf_test_data, bnf_test_labels, batch_size=batch_size)
 
 ## top model
-import keras.backend as K
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
-from keras.layers import Activation, Dropout, Flatten, Dense, Reshape
-from keras import regularizers
-
 alpha = 1
 dropout=1e-3
 
@@ -111,21 +121,26 @@ top_model.add(Conv2D(classes, (1, 1),
 top_model.add(Activation('softmax', name='act_softmax'))
 top_model.add(Reshape((classes,), name='reshape_2'))
 
-top_model.compile(optimizer='adam',
-              loss='categorical_crossentropy', metrics=['accuracy'])
+top_model.compile(loss='categorical_crossentropy',
+              optimizer=optimizers.SGD(lr=lr, momentum=momentum),
+              metrics=['accuracy'])
 top_model.summary()
 
 # fit the model
-from keras.callbacks import EarlyStopping, ModelCheckpoint
 checkpointer = ModelCheckpoint(filepath=model_path, verbose=1, save_best_only=True)
 early_stopping = EarlyStopping(monitor='val_loss', patience=2, verbose=1)
+csv_logger = CSVLogger(loss_history_csv_name, append=True, separator=',')
+lrscheduler = LearningRateScheduler(schedule=lr_schedule)
+
+
 top_model.fit_generator(bnf_train_gen,
           steps_per_epoch= (1 + int(bnf_train_data_size // batch_size)),
           epochs=epochs,
           validation_data=bnf_valid_gen,
           validation_steps= (1 + int(bnf_valid_data_size // batch_size)),
-          callbacks=[early_stopping, checkpointer])
+          callbacks=[early_stopping, checkpointer, csv_logger, lrscheduler])
 
+# calculate result
 y_true, y_pred = prediction_from_gen(gen=bnf_test_gen,
                                      steps=(1 + int(bnf_test_data_size // batch_size)),
                                      model=top_model,
