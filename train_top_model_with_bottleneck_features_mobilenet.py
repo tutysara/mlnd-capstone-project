@@ -15,6 +15,7 @@ from keras.layers import Activation, Dropout, Flatten, Dense, Reshape
 from keras import regularizers
 from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger, LearningRateScheduler
 from keras import optimizers
+from keras.regularizers import l2 
 
 import tensorflow as tf
 config = tf.ConfigProto()
@@ -33,6 +34,7 @@ num_classes = 3
 batch_size = 32
 lr=1e-3
 momentum=0.9
+weight_decay = 1e-5
 test_prefix=""
 
 def lr_schedule(epoch):
@@ -118,7 +120,7 @@ top_model.add(GlobalAveragePooling2D(input_shape=(7, 7, 1024)))
 top_model.add(Reshape(shape, name='reshape_1'))
 top_model.add(Dropout(dropout, name='dropout'))
 top_model.add(Conv2D(classes, (1, 1),
-           padding='same', name='conv_preds'))
+           padding='same', name='conv_preds', kernel_regularizer=l2(weight_decay)))
 top_model.add(Activation('softmax', name='act_softmax'))
 top_model.add(Reshape((classes,), name='reshape_2'))
 

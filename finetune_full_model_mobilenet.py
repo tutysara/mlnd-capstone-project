@@ -143,13 +143,12 @@ model = Sequential()
 for l in mobilenet_model.layers:
     model.add(l)
 
-
-# CONCATENATE THE TWO MODELS
-model.add(top_model)
-
 # LOCK THE TOP CONV LAYERS
 for layer in model.layers:
-    layer.trainable = False
+    layer.trainable = True
+    
+# CONCATENATE THE TWO MODELS
+model.add(top_model)
 
 # COMPILE THE MODEL
 model.compile(loss='categorical_crossentropy',
