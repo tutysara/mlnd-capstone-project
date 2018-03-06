@@ -49,11 +49,15 @@ def bcolz_prediction_writer(gen, steps, model, preprocess, dirname ):
     y.flush()
     return X, y
 
-def bcolz_data_generator(bclz_data, bclz_labels, batch_size=32, progress=False):
+def bcolz_data_generator(bclz_data, bclz_labels, batch_size=32, progress=False, preprocess=None):
     while True:
         max_range = (1 + bclz_data.shape[0]//batch_size)
         for i in range(max_range):
             s = time.time()
-            yield bclz_data[i*batch_size : (i+1)*batch_size], bclz_labels[i*batch_size : (i+1)*batch_size]
+            curr_batch_X, curr_batch_y = bclz_data[i*batch_size : (i+1)*batch_size], bclz_labels[i*batch_size : (i+1)*batch_size]
+            X_out = curr_batch_X
+            if preprocess:
+                X_out = preprocess(curr_batch_X)                
+            yield (X_out, curr_batch_y)
             if progress and max_range>1:
                 log.debug("bcolz.gen Iteration {i}/{t} took {s:.2f}s".format(i=i, t=max_range, s=(time.time()-s)))

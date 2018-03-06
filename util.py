@@ -41,7 +41,7 @@ def df_data_generator(df, batch_size=32, num_classes=3, shuffle=False, basedir="
                 print("df.gen Iteration {i}/{t} took {s:.2f}s".format(i=i, t=max_range, s=(time.time()-s)))
 
 def img_to_tensor_transformer(x):
-    return paths_to_tensor(x)
+    return paths_to_tensor(x).astype('float32')
 
 def prediction_from_gen(gen, steps, model, dirname ):
     y_true = None; y_pred = None
