@@ -31,14 +31,14 @@ config.gpu_options.allow_growth = True
 sess = tf.Session(config = config)
 
 arch = "vgg19"
-#basedir="/media/hdd/datastore/t4sa"
-basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
+basedir="/media/hdd/datastore/t4sa"
+#basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
 
-percent = 0.25
+percent = 0.005
 #percent = 1
 epochs=15
-num_classes = 133
-#num_classes = 3 
+#num_classes = 133
+num_classes = 3 
 #batch_size = 48
 batch_size = 64
 lr=1e-3
