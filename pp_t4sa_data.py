@@ -22,14 +22,13 @@ from keras.applications.imagenet_utils import preprocess_input
 import time
 
 
-arch = "vgg19"
-batch_size = 16
+batch_size = 32
 
 percent = 0.005
 percent = 1
 
 d = datetime.datetime.today()
-log_filename = f"tx2_bottleneck_{arch}_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}.log"
+log_filename = f"pp_data_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.log"
 
 logging.basicConfig(level='DEBUG',
                     handlers=[logging.FileHandler(log_filename),
@@ -38,8 +37,8 @@ logging.basicConfig(level='DEBUG',
 log = logging.getLogger(__name__)
 log.debug("transform data to bottleneck features")
 
-#basedir="/media/hdd/datastore/t4sa"
-basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
+basedir="/media/hdd/datastore/t4sa"
+#basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
 
 valid_name = basedir + '/valid_data'
 test_name = basedir + '/test_data'
@@ -133,7 +132,7 @@ pp_test_data,  pp_test_labels = bcolz_prediction_writer(gen=test_data_gen,
 log.debug("Took {:.2f} seconds to calculate bnf_test_data".format(time.time()-s))
 
 s= time.time()
-remove_bcolz_dir(bnf_train_name)
+remove_bcolz_dir(pp_train_name)
 pp_train_data,  pp_train_labels = bcolz_prediction_writer(gen=train_data_gen,
                         steps=(1+(train_data.shape[0]//batch_size)),
                         model=identity_model,
