@@ -30,15 +30,15 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.Session(config = config)
 
-arch = "vgg19"
-basedir="/media/hdd/datastore/t4sa"
-#basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
+arch = "caffe_vgg19"
+#basedir="/media/hdd/datastore/t4sa"
+basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
 
-percent = 0.005
+#percent = 0.25
 percent = 1
 epochs=15
-#num_classes = 133
-num_classes = 3 
+num_classes = 133
+#num_classes = 3 
 #batch_size = 48
 batch_size = 64
 lr=1e-3
@@ -53,25 +53,20 @@ def lr_schedule(epoch):
 
 if percent < 1:
     test_prefix = "test_"
-    
+
+d = datetime.datetime.today()
+
 model_path = f'saved_models/{test_prefix}fc_layers_{arch}_weights.hdf5'
 loss_history_csv_name = f'{test_prefix}fc_layers.{arch}_loss_history.csv'
 test_result = f'saved_models/{test_prefix}fc_layers_{arch}_result.npz'
+log_filename=f"fc_layer_train_{arch}_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}_{test_prefix}.log"
 
-d = datetime.datetime.today()
 
 logging.basicConfig(level='DEBUG',
-                    handlers=[
+                    handlers=[logging.FileHandler(log_filename),
                               logging.StreamHandler()])
 log = logging.getLogger(__name__)
 
-
-d = datetime.datetime.today()
-log_filename=f"fc_layer_train_{arch}_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}_{test_prefix}.log"
-logging.basicConfig(level='DEBUG',
-                    handlers=[logging.FileHandler(log_filename),
-                              #logging.StreamHandler()
-                             ])
 
 log = logging.getLogger(__name__)
 log.debug("fine tune fully connected layer")
@@ -140,21 +135,22 @@ train_data_gen = bcolz_data_generator(train_data,
                                       batch_size=batch_size, progress=True, shuffle=True)
 
 ## top model
-classes = num_classes
-
 # Generate a model with all layers (with top)
 vgg19 = VGG19(weights='imagenet', include_top=True)
 
-#Add a layer where input is the output of the  second last layer 
-x = Dense(num_classes, activation='softmax', name='my_predictions')(vgg19.layers[-2].output)
+x = Dropout(0.5,name="dropout1")(vgg19.layers[-3].output)
+x = vgg19.layers[-2](x)
+x = Dropout(0.5,name="dropout2")(x)
+x = Dense(num_classes, activation='softmax', name='my_predictions')(x)
 
 for layer in vgg19.layers:
     layer.trainable = False
+
+my_model = Model(inputs=vgg19.input, outputs=x)
     
 #Then create the corresponding model 
-my_model = Model(inputs=vgg19.input, outputs=x)
+my_model.layers[-5].trainable = True
 my_model.layers[-3].trainable = True
-my_model.layers[-2].trainable = True
 my_model.layers[-1].trainable = True
 #my_model.summary()
 
