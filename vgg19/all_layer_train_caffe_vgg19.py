@@ -31,14 +31,14 @@ config.gpu_options.allow_growth = True
 sess = tf.Session(config = config)
 
 arch = "caffe_vgg19"
-basedir="/media/hdd/datastore/t4sa"
-#basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
+#basedir="/media/hdd/datastore/t4sa"
+basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
 
-#percent = 0.25
-percent = 1
+percent = 0.25
+#percent = 1
 epochs=15
-#num_classes = 133
-num_classes = 3 
+num_classes = 133
+#num_classes = 3 
 #batch_size = 48
 batch_size = 64
 lr=1e-3
@@ -56,10 +56,10 @@ if percent < 1:
 
 d = datetime.datetime.today()
 
-model_path = f'saved_models/{test_prefix}fc_layers_{arch}_weights.hdf5'
-loss_history_csv_name = f'{test_prefix}fc_layers.{arch}_loss_history.csv'
-test_result = f'saved_models/{test_prefix}fc_layers_{arch}_result.npz'
-log_filename=f"fc_layer_train_{arch}_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}_{test_prefix}.log"
+model_path = f'saved_models/{test_prefix}all_layers_{arch}_weights.hdf5'
+loss_history_csv_name = f'{test_prefix}all_layers.{arch}_loss_history.csv'
+test_result = f'saved_models/{test_prefix}all_layers_{arch}_result.npz'
+log_filename=f"all_layer_train_{arch}_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}_{test_prefix}.log"
 
 
 logging.basicConfig(level='DEBUG',
@@ -67,8 +67,9 @@ logging.basicConfig(level='DEBUG',
                               logging.StreamHandler()])
 log = logging.getLogger(__name__)
 
-log.debug("fine tune fully connected layer")
-log.debug("using fc_model_weight_path :" + model_path)
+
+log.debug("fine tune all layers")
+log.debug("using all_model_weight_path :" + model_path)
 log.debug("using test_result :" + test_result)
 log.debug("using loss_history_csv_name :" + loss_history_csv_name)
 
