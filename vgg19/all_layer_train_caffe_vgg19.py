@@ -34,13 +34,14 @@ arch = "caffe_vgg19"
 basedir="/media/hdd/datastore/t4sa"
 #basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
 
-#percent = 0.25
+#percent = 0.00099
 percent = 1
+#epochs=5
 epochs=15
 #num_classes = 133
 num_classes = 3 
-#batch_size = 48
-batch_size = 64
+batch_size = 48
+#batch_size = 64
 lr=1e-3
 momentum=0.9
 l2_weight_decay = 1e-5
@@ -142,8 +143,9 @@ x = vgg19.layers[-2](x)
 x = Dropout(0.5,name="dropout2")(x)
 x = Dense(num_classes, activation='softmax', name='my_predictions')(x)
 
+# unfreeze all layers
 for layer in vgg19.layers:
-    layer.trainable = False
+    layer.trainable = True
 
 my_model = Model(inputs=vgg19.input, outputs=x)
     
@@ -180,6 +182,9 @@ my_model.fit_generator(train_data_gen,
           validation_data=valid_data_gen,
           validation_steps= (1 + int(valid_data_size // batch_size)),
           callbacks=[early_stopping, checkpointer, csv_logger, lrscheduler])
+
+# load the best model
+my_model.load_weights(model_path)
 
 # calculate result
 y_true, y_pred = prediction_from_gen(gen=test_data_gen,
