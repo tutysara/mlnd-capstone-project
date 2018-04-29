@@ -1,0 +1,34 @@
+DEBUG:__main__:fine tune fully connected layer
+DEBUG:__main__:using fc_model_weight_path :saved_models/fc_layers_inceptionresnetv2_weights.hdf5
+DEBUG:__main__:using test_result :saved_models/fc_layers_inceptionresnetv2_result.npz
+DEBUG:__main__:using loss_history_csv_name :logs/fc_layers.inceptionresnetv2_loss_history.csv
+DEBUG:__main__:loading original data from disk
+DEBUG:__main__:(51000, 224, 224, 3)
+DEBUG:__main__:(51000, 224, 224, 3)
+DEBUG:__main__:(368586, 224, 224, 3)
+DEBUG:__main__:(51000, 3)
+DEBUG:__main__:(51000, 3)
+DEBUG:__main__:(368586, 3)
+DEBUG:__main__:loading percentage of original data from disk
+DEBUG:__main__:(51000, 224, 224, 3)
+DEBUG:__main__:(51000, 224, 224, 3)
+DEBUG:__main__:(368586, 224, 224, 3)
+DEBUG:__main__:(51000, 3)
+DEBUG:__main__:(51000, 3)
+DEBUG:__main__:(368586, 3)
+INFO:__main__:new_lr 0.001
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 0/5760 took 2.34s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 1/5760 took 2.16s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 2/5760 took 2.11s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 3/5760 took 1.97s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 4/5760 took 1.89s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 5/5760 took 1.65s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 6/5760 took 1.72s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 7/5760 took 1.50s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 8/5760 took 1.69s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 9/5760 took 1.57s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 10/5760 took 1.46s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 11/5760 took 1.74s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 12/5760 took 1.55s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 13/5760 took 1.69s
+DEBUG:bcolzutils:bcolz.gen pp_train_data_data Iteration 14/5760 took 1.45s

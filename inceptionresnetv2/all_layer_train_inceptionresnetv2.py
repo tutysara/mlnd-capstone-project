@@ -12,31 +12,25 @@ from bcolzutils import *
 from util import *
 
 import keras.backend as K
-from keras.models import Sequential, Model
-from keras.layers import Dropout, Flatten, Dense, GlobalAveragePooling2D, Reshape, Conv2D, Activation
+from keras.models import Model
+from keras.layers import Dropout, Dense, GlobalAveragePooling2D
 from keras import regularizers
 from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger, LearningRateScheduler
 from keras import optimizers
-from keras.regularizers import l2 
 
-from keras.applications.mobilenet import MobileNet
-from keras.applications.mobilenet import preprocess_input as mobile_preprocess_input
+from keras.applications.inception_resnet_v2 import InceptionResNetV2
 
 import tensorflow as tf
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.Session(config = config)
 
-arch = "mobilenet"
+arch = "inceptionresnetv2"
 basedir="/media/hdd/datastore/t4sa"
-#basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
 
-#percent = 0.00099
 percent = 1
-#epochs=5
 epochs=15
-#num_classes = 133
-num_classes = 3 
+num_classes = 3
 batch_size = 48
 #batch_size = 64
 lr=1e-3
@@ -46,6 +40,17 @@ test_prefix=""
 alpha = 1.0
 dropout = 1e-3
 #dropout = 0.25
+
+if(False):
+    # original data sample
+    percent = 0.025
+    epochs=15
+if(False):
+     # dog project data
+    percent = 1
+    epochs=15
+    num_classes = 133
+    basedir="/home/tutysara/src/myprojects/dog-project/dogImages"
 
 def lr_schedule(epoch):
     """ divides the lr by 10 every 5 epochs"""
@@ -58,16 +63,19 @@ if percent < 1:
 d = datetime.datetime.today()
 
 model_path = f'saved_models/{test_prefix}all_layers_{arch}_weights.hdf5'
-loss_history_csv_name = f'{test_prefix}all_layers.{arch}_loss_history.csv'
+loss_history_csv_name = f'logs/{test_prefix}all_layers.{arch}_loss_history.csv'
 test_result = f'saved_models/{test_prefix}all_layers_{arch}_result.npz'
-log_filename=f"all_layer_train_{arch}_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}_{test_prefix}.log"
+log_filename=f"logs/all_layer_train_{arch}_{d.year}-{d.month}-{d.day}-{d.hour}.{d.minute}.{d.second}_{test_prefix}.log"
 
+
+fh = logging.FileHandler(log_filename)
+fh.setLevel(logging.DEBUG)
+sh = logging.StreamHandler()
+sh.setLevel(logging.INFO)
 
 logging.basicConfig(level='DEBUG',
-                    handlers=[logging.FileHandler(log_filename),
-                              logging.StreamHandler()])
+                    handlers=[fh, sh])
 log = logging.getLogger(__name__)
-
 
 log.debug("fine tune all layers")
 log.debug("using all_model_weight_path :" + model_path)
@@ -135,49 +143,35 @@ train_data_gen = bcolz_data_generator(train_data,
                                       batch_size=batch_size, progress=True, shuffle=True)
 
 ## top model
-mobilenet = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3), pooling=None)
-if K.image_data_format() == 'channels_first':
-    shape = (int(1024 * alpha), 1, 1)
-else:
-    shape = (1, 1, int(1024 * alpha))
-            
+inceptionresnetv2 = InceptionResNetV2(weights='imagenet', include_top=False, input_shape=(224, 224, 3), pooling=None)
 
-for layer in mobilenet.layers:
+alpha = 1.0
+dropout = 1e-3
+#dropout = 0.5
+classes = num_classes
+for layer in inceptionresnetv2.layers:
     layer.trainable = True
 
 
-## from keras source for mobilenet  
-x = mobilenet.output
-x = GlobalAveragePooling2D()(x)
-x = Reshape(shape, name='reshape_1')(x)
-x = Dropout(dropout, name='dropout')(x)
-x = Conv2D(256, (1, 1),
-           padding='same', name='conv_preds')(x)
-x = Dense(128, name='dense11')(x)
-x = Dropout(dropout, name='dropout12')(x)
-
-x = Dense(num_classes, name='dense2')(x)
-x = Activation('softmax', name='act_softmax')(x)
-x = Reshape((num_classes,), name='reshape_2')(x)
-
-my_model = Model(inputs=mobilenet.input, outputs=x)
-
-#my_model.summary()
+## from keras source for InceptionResNetV2
+x = inceptionresnetv2.output
+#set_trace()
+print(x)
+x = GlobalAveragePooling2D(name='avg_pool')(x)
 """ 
-for layer in my_model.layers:
-    if hasattr(layer, 'kernel_regularizer'):
-        layer.kernel_regularizer= regularizers.l2(l2_weight_decay)
-     
-for layer in my_model.layers:
-    if hasattr(layer, 'kernel_regularizer'):
-        log.debug("{}, {}, {}".format(layer.name,layer.trainable, layer.kernel_regularizer))
-    else:
-        log.debug("{},{}".format(layer.name,layer.trainable))
-"""      
+x = Dropout(dropout, name='dropout_top1')(x)
+x = Dense(512, name='dense_top1')(x)
+x = Dropout(dropout, name='dropout_top2')(x)
+x = Dense(256, name='dense_top2')(x)
+x = Dropout(dropout, name='dropout_top3')(x)
+""" 
+x = Dense(classes, activation='softmax', name='predictions')(x)
+        
+my_model = Model(inputs=inceptionresnetv2.input, outputs=x)    
     
 # fit the model
 checkpointer = ModelCheckpoint(filepath=model_path, verbose=1, save_best_only=True)
-early_stopping = EarlyStopping(monitor='val_loss', patience=15, verbose=1)
+early_stopping = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
 csv_logger = CSVLogger(loss_history_csv_name, append=True, separator=',')
 lrscheduler = LearningRateScheduler(schedule=lr_schedule)
 
@@ -190,7 +184,10 @@ my_model.fit_generator(train_data_gen,
           epochs=epochs,
           validation_data=valid_data_gen,
           validation_steps= (1 + int(valid_data_size // batch_size)),
-          callbacks=[early_stopping, checkpointer, csv_logger, lrscheduler])
+          #callbacks=[early_stopping, csv_logger,lrscheduler]
+          callbacks=[early_stopping, checkpointer, csv_logger,lrscheduler]
+          )
+
 
 # load the best model
 my_model.load_weights(model_path)

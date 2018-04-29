@@ -34,7 +34,7 @@ epochs=15
 num_classes = 3
 #batch_size = 48
 batch_size = 64
-lr=1e-1
+lr=1e-3
 momentum=0.9
 l2_weight_decay = 1e-5
 test_prefix=""
@@ -42,10 +42,10 @@ alpha = 1.0
 dropout = 1e-3
 #dropout = 0.25
 
-if(True):
+if(False):
     # original data sample
-    percent = 0.001
-    epochs=5
+    percent = 0.025
+    epochs=15
 if(False):
      # dog project data
     percent = 1
@@ -59,7 +59,9 @@ if(False):
 def lr_schedule(epoch):
     """ divides the lr by 10 every 5 epochs"""
     n = (epoch + 1) // 5
-    return lr / (10 ** n)
+    new_lr = lr / (10 ** n)
+    log.info("new_lr " + str(new_lr))
+    return new_lr
 
 if percent < 1:
     test_prefix = "test_"
@@ -188,9 +190,9 @@ my_model.fit_generator(train_data_gen,
           epochs=epochs,
           validation_data=valid_data_gen,
           validation_steps= (1 + int(valid_data_size // batch_size)),
-          callbacks=[early_stopping, csv_logger,lrscheduler]
-          #callbacks=[early_stopping, checkpointer, csv_logger,lrscheduler]
-                      )
+          #callbacks=[early_stopping, csv_logger,lrscheduler]
+          callbacks=[early_stopping, checkpointer, csv_logger,lrscheduler]
+          )
 
 # calculate result
 y_true, y_pred = prediction_from_gen(gen=test_data_gen,
