@@ -57,7 +57,7 @@ def bcolz_data_generator(bclz_data, bclz_labels, batch_size=32, progress=False, 
         m = re.search('^.*\/(.*)\.bclz', bclz_data.rootdir)
         if m:
             name = m.group(1)
-    
+
     while True:
         indices = list(range(len(bclz_data)))
         if shuffle:
@@ -69,7 +69,7 @@ def bcolz_data_generator(bclz_data, bclz_labels, batch_size=32, progress=False, 
             curr_batch_X, curr_batch_y = bclz_data[indexes], bclz_labels[indexes]
             X_out = curr_batch_X
             if preprocess:
-                X_out = preprocess(curr_batch_X)                
+                X_out = preprocess(curr_batch_X)
             yield (X_out, curr_batch_y)
             if progress and max_range>1:
                 log.debug("bcolz.gen {name} Iteration {i}/{t} took {s:.2f}s".format(name=name, i=i, t=max_range, s=(time.time()-s)))
