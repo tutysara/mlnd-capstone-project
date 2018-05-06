@@ -45,7 +45,13 @@ $(document).ready(function () {
                 // Get and display the result
                 $('.loader').hide();
                 $('#result').fadeIn(600);
-                $('#result').text(' Result:  ' + data);
+                console.log("data" + data);
+                var output = "<table><tbody><tr>"
+                            + "<td>positive probability</td><td>" + data.positive + "</td>"
+                            + "<td>Neutral probability</td><td>" + data.neutral + "</td>"
+                            + "<td>Negative probability</td><td>" + data.negative + "</td>"
+                            + "</tr></tbody></table>"
+                $('#result').html(' Result:  ' + output);
                 console.log('Success!');
             },
         });
