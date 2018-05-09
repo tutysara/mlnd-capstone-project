@@ -1,0 +1,25 @@
+2018-04-20 17:56:14.030622: I tensorflow/core/platform/cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX
+2018-04-20 17:56:14.227170: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1030] Found device 0 with properties: 
+name: GeForce GTX 1070 major: 6 minor: 1 memoryClockRate(GHz): 1.7845
+pciBusID: 0000:05:00.0
+totalMemory: 7.92GiB freeMemory: 7.60GiB
+2018-04-20 17:56:14.227230: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1120] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: GeForce GTX 1070, pci bus id: 0000:05:00.0, compute capability: 6.1)
+2018-04-20 17:56:27.166424: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1120] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: GeForce GTX 1070, pci bus id: 0000:05:00.0, compute capability: 6.1)
+Using TensorFlow backend.
+/home/tutysara/anaconda2/envs/dog-project/lib/python3.6/importlib/_bootstrap.py:205: RuntimeWarning: compiletime version 3.5 of module 'tensorflow.python.framework.fast_tensor_util' does not match runtime version 3.6
+  return f(*args, **kwds)
+INFO:__main__:new_lr 0.001
+INFO:__main__:new_lr 0.001
+INFO:__main__:new_lr 0.001
+INFO:__main__:new_lr 0.001
+INFO:__main__:new_lr 0.0001
+INFO:__main__:new_lr 0.0001
+INFO:__main__:new_lr 0.0001
+INFO:__main__:new_lr 0.0001
+INFO:__main__:new_lr 0.0001
+INFO:__main__:new_lr 1e-05
+INFO:__main__:new_lr 1e-05
+INFO:__main__:new_lr 1e-05
+INFO:__main__:new_lr 1e-05
+INFO:__main__:new_lr 1e-05
+INFO:__main__:new_lr 1e-06
