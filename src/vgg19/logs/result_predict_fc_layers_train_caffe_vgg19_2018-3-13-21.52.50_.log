@@ -1,0 +1,9 @@
+DEBUG:__main__:prediction for fine tune fc layers
+DEBUG:__main__:using fc_model_weight_path :saved_models/fc_layers_caffe_vgg19_weights.hdf5
+DEBUG:__main__:using test_result :saved_models/fc_layers_caffe_vgg19_result.npz
+DEBUG:__main__:Prediction time :4355.044603212038
+DEBUG:__main__:(368584, 3)
+DEBUG:__main__:(368584, 3)
+DEBUG:__main__:(368584, 3)
+DEBUG:__main__:(368584, 3)
+DEBUG:__main__:Test accuracy: 50.4194%
