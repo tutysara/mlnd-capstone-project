@@ -1,9 +1,0 @@
-DEBUG:__main__:prediction for fine tune all layers
-DEBUG:__main__:using all_model_weight_path :saved_models/all_layers_caffe_vgg19_weights.hdf5
-DEBUG:__main__:using test_result :saved_models/all_layers_caffe_vgg19_result.npz
-DEBUG:__main__:Prediction time :4853.984054474975
-DEBUG:__main__:(368584, 3)
-DEBUG:__main__:(368584, 3)
-DEBUG:__main__:(368584, 3)
-DEBUG:__main__:(368584, 3)
-DEBUG:__main__:Test accuracy: 51.0179%
