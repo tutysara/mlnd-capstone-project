@@ -1,11 +1,12 @@
 from __future__ import division, print_function
 # coding=utf-8
 import sys
+sys.path.append('..')
 import os
 import glob
 import re
 import numpy as np
-
+from mobilenet.model import get_model
 # Keras
 from keras.applications.imagenet_utils import preprocess_input, decode_predictions
 from keras.models import load_model
