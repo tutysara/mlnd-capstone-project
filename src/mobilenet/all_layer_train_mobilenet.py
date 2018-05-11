@@ -28,7 +28,7 @@ percent = 1
 #epochs=5
 epochs=15
 #num_classes = 133
-num_classes = 3 
+num_classes = 3
 batch_size = 48
 #batch_size = 64
 lr=1e-3
@@ -70,7 +70,7 @@ train_name = basedir + '/pp_train_data'
 valid_name = basedir + '/pp_valid_data'
 test_name = basedir + '/pp_test_data'
 
-temp_dir = "/tmp/" 
+temp_dir = "/tmp/"
 
 ## load original bcolz data from disk
 # read from disk and check size
@@ -98,14 +98,14 @@ train_data_size = int(train_data.shape[0]*percent)
 if percent < 1:
     valid_data = valid_data[:valid_data_size]
     valid_labels = valid_labels[:valid_data_size]
-    
+
     test_data = test_data[:test_data_size]
     test_labels = test_labels[:test_data_size]
-    
+
     train_data = train_data[:train_data_size]
     train_labels = train_labels[:train_data_size]
 
-    
+
 log.debug("loading percentage of original data from disk")
 log.debug(valid_data.shape)
 log.debug(test_data.shape)
@@ -129,18 +129,18 @@ train_data_gen = bcolz_data_generator(train_data,
 
 my_model = get_model(num_classes, alpha, dropout, train_all_layer=True)
 #my_model.summary()
-""" 
+"""
 for layer in my_model.layers:
     if hasattr(layer, 'kernel_regularizer'):
         layer.kernel_regularizer= regularizers.l2(l2_weight_decay)
-     
+
 for layer in my_model.layers:
     if hasattr(layer, 'kernel_regularizer'):
         log.debug("{}, {}, {}".format(layer.name,layer.trainable, layer.kernel_regularizer))
     else:
         log.debug("{},{}".format(layer.name,layer.trainable))
-"""      
-    
+"""
+
 # fit the model
 checkpointer = ModelCheckpoint(filepath=model_path, verbose=1, save_best_only=True)
 early_stopping = EarlyStopping(monitor='val_loss', patience=15, verbose=1)
@@ -150,7 +150,7 @@ lrscheduler = LearningRateScheduler(schedule=lr_schedule)
 my_model.compile(loss='categorical_crossentropy',
           optimizer=optimizers.SGD(lr=lr, momentum=momentum),
           metrics=['accuracy'])
-    
+
 my_model.fit_generator(train_data_gen,
           steps_per_epoch= (1 + int(train_data_size // batch_size)),
           epochs=epochs,
