@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 # coding=utf-8
 import sys
-sys.path.append('..')
+sys.path.append('../mobilenet')
 import os
 import glob
 import re
@@ -17,22 +17,23 @@ from flask import Flask, redirect, url_for, request, render_template
 from werkzeug.utils import secure_filename
 from gevent.wsgi import WSGIServer
 
+from mobilenet import get_model
 # Define a flask app
 app = Flask(__name__)
 
 # Model saved with Keras model.save()
-MODEL_PATH = 'models/your_model.h5'
+MODEL_PATH = '../mobilenet/saved_models/all_layers_mobilenet_weights.hdf5'
 
 # Load your trained model
-# model = load_model(MODEL_PATH)
-# model._make_predict_function()          # Necessary
-# print('Model loaded. Start serving...')
+model = get_model(MODEL_PATH)
+model._make_predict_function()          # Necessary
+print('Model loaded. Start serving...')
 
 # You can also use pretrained model from Keras
 # Check https://keras.io/applications/
-from keras.applications.resnet50 import ResNet50
-model = ResNet50(weights='imagenet')
-print('Model loaded. Check http://127.0.0.1:5000/')
+"from keras.applications.resnet50 import ResNet50
+"model = ResNet50(weights='imagenet')
+"print('Model loaded. Check http://127.0.0.1:5000/')
 
 
 def model_predict(img_path, model):
