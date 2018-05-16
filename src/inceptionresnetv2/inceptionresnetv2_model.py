@@ -1,6 +1,7 @@
 import keras.backend as K
 from keras.models import Sequential, Model
 from keras.layers import Dropout, Dense, GlobalAveragePooling2D
+from keras.applications.inception_resnet_v2 import InceptionResNetV2
 
 def get_model(num_classes=3, alpha=1.0, dropout=1e-3, train_all_layer=False):
 ## top model

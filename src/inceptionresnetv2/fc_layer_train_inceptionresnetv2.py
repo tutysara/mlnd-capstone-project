@@ -16,8 +16,6 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger, LearningR
 from keras import optimizers
 from keras.regularizers import l2
 
-from keras.applications.inception_resnet_v2 import InceptionResNetV2
-
 import tensorflow as tf
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
