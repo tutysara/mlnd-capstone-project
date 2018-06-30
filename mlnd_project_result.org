@@ -126,7 +126,7 @@
       
      We can see that InceptionResnetV2 models are high on CPU load while the MobilenetV2 has the least CPU load and the VGG19 models are inbetween.
 
-      Here is the table and graph for vsize usage
+     Here is the table and graph for vsize usage
      Table 6: Average Relative vsize while training on T4SA training data
     | Model                  | Average Relative Memory Usage |
     |------------------------+-------------------------------|
@@ -142,21 +142,78 @@
    
     We can see that MobilenetV2 models has less memory demand followed by InceptionResnetV2, while the VGG19 models places a heavy demand on memory
 
-
-      - Test Results
-      - Test accuracy
-      - Test time (CPU)
-      - Test time (GPU)
-      - Training Results
-        - Time
-        - Memory
-        - CPU
+    Finally we also measure and compare the memory footprint of the trained and saved models.
+    Memory footprint plays an important role since the model has to be loaded into memory when deployed.
+    It determines the memory usage and subsequently the cost of running the application since many cloud providers charge for infrastructure based on the memory requirement.
+    It also determines the load time and scaling out time, a model with less memory footprint is quick to load and as a result easy to scale out.
+    Smaller models are also preferred on mobile devices because of limited resources and low bandwidth connection.
+    An app with a small apk size can be downloaded and used easily and can be updated frequently.
+    
+    Here is the table and graph for memory footprint
+     Table 7: Memory footprint of models trained on T4SA training data
+    | Model                  | Size on disk in bytes |
+    |------------------------+-----------------------|
+    | VGG19-FT-F             |            1036656072 |
+    | VGG19-FT-A             |            1116766456 |
+    | MobilenetV2-FT-F       |              15544744 |
+    | MobilenetV2-FT-A       |              28407960 |
+    | InceptionResnetV2-FT-F |             219423224 |
+    | InceptionResnetV2-FT-A |             436709216 |
+    
+     [[./imgs/trained_model_memory_footprint_comparision.png]]
 
 ** Webapp
-  POC, using mobilenet the fastest to respond using cpu 
+   I created a webapp that can find the positive, neutral or negative sentiment of the uploaded image.
+   The webapp can be run on a commodity webserver with no GPU.
+   The software stack comprises of python with Flask framework for the backend and plain javascript along with Jquery is used for the frontend.
+   The MobilenetV2 based model MobilenetV2-FT-A is used to make the decision in the application, MobilenetV2 based models are used since they are
+         1. Light on resource usage (CPU and Memory)
+         2. Fast inference time on CPU
+         3. Small model footprint
+       
+ 
 ** Conclusion
+   We used the labeled data from the B-T4SA dataset to train our models ( VGG19-FT-F,  VGG19-FT-A ).
+   I was able to replicate the results from the experiment using the architecture described in the paper, these are set as baseline models.
+
+   I fine tuned two models based on InceptionResnetV2 and two on MobilenetV2 architectures trained on imagenet data.
+   All these models are trained using the same training and validation data and tested against the test set from the downloaded B-T4SA dataset and TDD dataset found at DeepSent.
+   
+   We then compared the new models performance to the baseline models and summarized the results in various such as
+    - Accuracy
+    - Training time
+    - Inference time
+    - CPU load 
+    - Memory load
+    - Model Memory Footprint
+
+   We could see that the MobilenetV2 models achieved similar accuracy as the baseline models but has superior training and inference characteristics.
+   The  MobilenetV2-FT-A has a better accuracy compared to  MobilenetV2-FT-F, but it falls behind slightly on other performance characteristics compared to  MobilenetV2-FT-F model.
+   We have to make a tradeoff here and the  MobilenetV2-FT-A is selected for making the webapp, this is because the high accuracy and almost similar inference time as  MobilenetV2-FT-F model.
+   The  MobilenetV2-FT-F model beat MobilenetV2-FT-A model in certain characteristics like Training time, CPU load, Memory load and Model Memory Footprint.
+   But these are one time training cost and also the difference between  MobilenetV2-FT-A and MobilenetV2-FT-F are not drastic as compared to other models,
+   and they generally have the best performance characteristics of the three model types tested.
+   I selected the MobilenetV2 based model MobilenetV2-FT-A for creating the webapp based on the results and observation we have.
+   
+   The InceptionResnetV2 based models were also better than the baseline models but the MobilenetV2 based models are still better.
+   
+   I created a sample webapp based on MobilenetV2-FT-A model.
+   It is used to demonstrate deploying the model to a webserver as a microservice and I also created a basic frontend to interact with the service and label the uploaded image.
+   
 
 ** Future work
-   - Implement with pytorch, sample data from all three sections (train, test and valid), test upper limit
-   - Implement circular learning rate and varying cycle, try to train fast
+   - Implement the solution with pytorch and try improving the accuracy, sample data from all three sections (train, test and valid) and test the upper limit on the accuracy that can be achieved on
+   this dataset
+   - Implement circular learning rate and varying cycle from fast.ai library and try to train it faster.
+   - Create a mobile app, deploy the model in mobile and check the framerate achieved, try to extend to find sentiment of scene from camera based on framerate reached.
 
+
+** References
+   - T4SA -- http://www.t4sa.it/
+   - DeepSent -- https://www.cs.rochester.edu/u/qyou/DeepSent/deepsentiment.html
+   - Cross-Media Learning for Image Sentiment Analysis in the Wild
+    Lucia Vadicamo, Fabio Carrara, Andrea Cimino, Stefano Cresci, Felice Dell'Orletta, Fabrizio Falchi, Maurizio Tesconi [[http://openaccess.thecvf.com/content_ICCV_2017_workshops/papers/w5/Vadicamo_Cross-Media_Learning_for_ICCV_2017_paper.pdf][link]]
+   - Quanzeng You, Jiebo Luo, Hailin Jin and Jianchao Yang, "Robust Image Sentiment Analysis using Progressively Trained and Domain Transferred Deep Networks", the Twenty-Ninth AAAI Conference on Artificial Intelligence (AAAI), Austin, TX, January 25-30, 2015.[[https://www.cs.rochester.edu/u/qyou/papers/sentiment_analysis_final.pdf][link]]
+   - fast.ai -- https://github.com/fastai/fastai/
+   
+ 
