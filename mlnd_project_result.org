@@ -45,7 +45,7 @@
    | InceptionResnetV2-FT-A |   0.5078 |
    
    Here is the graph of the result
-   [[./imgs/accuracy_t4sa_testset.png]]
+   [[./src/imgs/accuracy_t4sa_testset.png]]
    
    The accuracies of the models on the Twitter Training Dataset is also measured.
    Here we can see that the more complex models like InceptionResnetV2-FT-A gives a better performance compared to less complex models like  VGG19-FT-A and MobilenetV2-FT-A.
@@ -63,7 +63,7 @@
    | InceptionResnetV2-FT-A | 0.768707 |
 
 
-   [[./imgs/accuracy_twitter_training_dataset.png]]
+   [[./src/imgs/accuracy_twitter_training_dataset.png]]
    
    The training time and inference time are also important factors in determining the usefulness of a machine learning model in a constrained environment.
    Most real world uses care about the training time and even more important is the inference time.
@@ -88,7 +88,7 @@
    | InceptionResnetV2-FT-F |                  2.004 |                        153977 |
    | InceptionResnetV2-FT-A |                    1.0 |                         76846 |
    
-    [[./imgs/training_time_comparision.png]]
+    [[./src/imgs/training_time_comparision.png]]
    
     The inference time is calculated by running the models on a subset of twitter training data.
     Inference time is calculated on the CPU since the models will be usually deployed on a webserver which has only CPU.
@@ -122,7 +122,7 @@
     | InceptionResnetV2-FT-F |                 1.194 |
     | InceptionResnetV2-FT-A |                 2.775 |
 
-     [[./imgs/training_cpu_usage_comparision.png]]
+     [[./src//imgs/training_cpu_usage_comparision.png]]
       
      We can see that InceptionResnetV2 models are high on CPU load while the MobilenetV2 has the least CPU load and the VGG19 models are inbetween.
 
@@ -137,7 +137,7 @@
     | InceptionResnetV2-FT-F |                          1.04 |
     | InceptionResnetV2-FT-A |                         1.369 |
 
-    [[./imgs/training_vsize_usage_comparision.png]]
+    [[./src/imgs/training_vsize_usage_comparision.png]]
 
    
     We can see that MobilenetV2 models has less memory demand followed by InceptionResnetV2, while the VGG19 models places a heavy demand on memory
@@ -160,7 +160,7 @@
     | InceptionResnetV2-FT-F |             219423224 |
     | InceptionResnetV2-FT-A |             436709216 |
     
-     [[./imgs/trained_model_memory_footprint_comparision.png]]
+     [[./src/imgs/trained_model_memory_footprint_comparision.png]]
 
 ** Webapp
    I created a webapp that can find the positive, neutral or negative sentiment of the uploaded image.
