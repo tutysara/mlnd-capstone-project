@@ -45,6 +45,8 @@
    | InceptionResnetV2-FT-A |   0.5078 |
    
    Here is the graph of the result
+
+    #+ATTR_HTML: :style float:right;
    [[./src/imgs/accuracy_t4sa_testset.png]]
    
    The accuracies of the models on the Twitter Training Dataset is also measured.
@@ -63,6 +65,7 @@
    | InceptionResnetV2-FT-A | 0.768707 |
 
 
+    #+ATTR_HTML: :style float:right;
    [[./src/imgs/accuracy_twitter_training_dataset.png]]
    
    The training time and inference time are also important factors in determining the usefulness of a machine learning model in a constrained environment.
@@ -78,6 +81,7 @@
    We can also observe that models where all layers are trained converge quickly than training only fully connected layers
    
    Here is the table and graph of the result
+
     Table 3 : Training time of models with T4SA training data.
    | Model                  | Relative Training Time | Actual Training Time in hours |
    |------------------------+------------------------+-------------------------------|
@@ -88,12 +92,14 @@
    | InceptionResnetV2-FT-F |                  2.004 |                        153977 |
    | InceptionResnetV2-FT-A |                    1.0 |                         76846 |
    
+    #+ATTR_HTML: :style float:right;
     [[./src/imgs/training_time_comparision.png]]
    
     The inference time is calculated by running the models on a subset of twitter training data.
     Inference time is calculated on the CPU since the models will be usually deployed on a webserver which has only CPU.
 
     Here is the table and graph of the result
+
     Table 4: Average Inference time of models on Twitter Test data
     | Model                  | Average Inference Time (15 images) (S) | Standard Deviation (mS) |
     |------------------------+----------------------------------------+-------------------------|
@@ -112,6 +118,7 @@
     We use a relative comparision here since the actual numbers will depend on the actual hardware that is used and we are interested only the relative ease with which the models can be trained.
     
     Here is the table and graph for CPU usage
+
      Table 5: Average Relative CPU load while training on T4SA training data
     | Model                  | Average Relative Load |
     |------------------------+-----------------------|
@@ -121,12 +128,14 @@
     | MobilenetV2-FT-A       |                 1.281 |
     | InceptionResnetV2-FT-F |                 1.194 |
     | InceptionResnetV2-FT-A |                 2.775 |
-
-     [[./src//imgs/training_cpu_usage_comparision.png]]
+    
+    #+ATTR_HTML: :style float:right;
+    [[./src//imgs/training_cpu_usage_comparision.png]]
       
      We can see that InceptionResnetV2 models are high on CPU load while the MobilenetV2 has the least CPU load and the VGG19 models are inbetween.
 
      Here is the table and graph for vsize usage
+
      Table 6: Average Relative vsize while training on T4SA training data
     | Model                  | Average Relative Memory Usage |
     |------------------------+-------------------------------|
@@ -136,7 +145,8 @@
     | MobilenetV2-FT-A       |                         1.301 |
     | InceptionResnetV2-FT-F |                          1.04 |
     | InceptionResnetV2-FT-A |                         1.369 |
-
+    
+    #+ATTR_HTML: :style float:right;
     [[./src/imgs/training_vsize_usage_comparision.png]]
 
    
@@ -150,6 +160,7 @@
     An app with a small apk size can be downloaded and used easily and can be updated frequently.
     
     Here is the table and graph for memory footprint
+
      Table 7: Memory footprint of models trained on T4SA training data
     | Model                  | Size on disk in bytes |
     |------------------------+-----------------------|
@@ -160,6 +171,7 @@
     | InceptionResnetV2-FT-F |             219423224 |
     | InceptionResnetV2-FT-A |             436709216 |
     
+    #+ATTR_HTML: :style float:right;
      [[./src/imgs/trained_model_memory_footprint_comparision.png]]
 
 ** Webapp
