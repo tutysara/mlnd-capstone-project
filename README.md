@@ -13,14 +13,15 @@ unzip the contents of the tar file inside the data directory.
 
 
 ## One time processing
-The data has to be convered to bcolz format. This is done by running the preprocessing scripts
+The data has to be convered to bcolz format.
+This is done by running the preprocessing scripts
 
 ```
 ipython src/load_data_to_bcolz.py
 ipython src/pp_t4sa_data.py
 ```
 
-## Processing scripts
+## Training and testing the model
 Each model has a training script and it should be run to rain the models. It is of the form
 {fc|all}_layer_train_<model>.py.
 

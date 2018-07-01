@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-06-30 Sat 20:44 -->
+<!-- 2018-06-30 Sat 23:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -233,18 +233,18 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgbb33e0d">1. Introduction</a></li>
-<li><a href="#org70efbea">2. Method</a></li>
-<li><a href="#org0e34ee2">3. Result</a></li>
-<li><a href="#orgb675819">4. Webapp</a></li>
-<li><a href="#orgd3ec5c4">5. Conclusion</a></li>
-<li><a href="#org7a3dd7d">6. Future work</a></li>
-<li><a href="#org07a24fa">7. References</a></li>
+<li><a href="#orgbacd852">1. Introduction</a></li>
+<li><a href="#org4beb9b0">2. Method</a></li>
+<li><a href="#orgc40e138">3. Result</a></li>
+<li><a href="#orgedb4e26">4. Webapp</a></li>
+<li><a href="#orgfff020e">5. Conclusion</a></li>
+<li><a href="#org23196d0">6. Future work</a></li>
+<li><a href="#org06ebcf4">7. References</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbb33e0d" class="outline-2">
-<h2 id="orgbb33e0d"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgbacd852" class="outline-2">
+<h2 id="orgbacd852"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 I tried to replicate the results in the paper, Cross-Media Learning for Image Sentiment Analysis in the Wild by Lucia Vadicamo et al.
@@ -256,8 +256,8 @@ The dataset is 63GB in size and contains 156,862 for each category resulting in 
 </p>
 </div>
 </div>
-<div id="outline-container-org70efbea" class="outline-2">
-<h2 id="org70efbea"><span class="section-number-2">2</span> Method</h2>
+<div id="outline-container-org4beb9b0" class="outline-2">
+<h2 id="org4beb9b0"><span class="section-number-2">2</span> Method</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The first step is preprocessing the images so, that it can be read quickly of the disk.
@@ -292,8 +292,8 @@ These 4 models are also finetuned similar to the VGG19 model for 15 epochs using
 </div>
 </div>
 
-<div id="outline-container-org0e34ee2" class="outline-2">
-<h2 id="org0e34ee2"><span class="section-number-2">3</span> Result</h2>
+<div id="outline-container-orgc40e138" class="outline-2">
+<h2 id="orgc40e138"><span class="section-number-2">3</span> Result</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 I was able to replicate the result given in the paper.
@@ -580,6 +580,12 @@ Table 4: Average Inference time of models on Twitter Test data
 </tbody>
 </table>
 
+
+<div class="figure">
+<p><img src="./src/imgs/inference_time_comparision.png" alt="inference_time_comparision.png" style="float:right;" />
+</p>
+</div>
+
 <p>
 We see that MobilenetV2 has the quickest test time followed by InceptionResnetV2 and VGG19 models.
 If are looking for a model that is quick with acceptable accuracy MobilenetV2 model is the way to go.
@@ -791,8 +797,8 @@ Table 7: Memory footprint of models trained on T4SA training data
 </div>
 </div>
 
-<div id="outline-container-orgb675819" class="outline-2">
-<h2 id="orgb675819"><span class="section-number-2">4</span> Webapp</h2>
+<div id="outline-container-orgedb4e26" class="outline-2">
+<h2 id="orgedb4e26"><span class="section-number-2">4</span> Webapp</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 I created a webapp that can find the positive, neutral or negative sentiment of the uploaded image.
@@ -809,8 +815,8 @@ The MobilenetV2 based model MobilenetV2-FT-A is used to make the decision in the
 </div>
 
 
-<div id="outline-container-orgd3ec5c4" class="outline-2">
-<h2 id="orgd3ec5c4"><span class="section-number-2">5</span> Conclusion</h2>
+<div id="outline-container-orgfff020e" class="outline-2">
+<h2 id="orgfff020e"><span class="section-number-2">5</span> Conclusion</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 We used the labeled data from the B-T4SA dataset to train our models ( VGG19-FT-F,  VGG19-FT-A ).
@@ -856,8 +862,8 @@ It is used to demonstrate deploying the model to a webserver as a microservice a
 </div>
 
 
-<div id="outline-container-org7a3dd7d" class="outline-2">
-<h2 id="org7a3dd7d"><span class="section-number-2">6</span> Future work</h2>
+<div id="outline-container-org23196d0" class="outline-2">
+<h2 id="org23196d0"><span class="section-number-2">6</span> Future work</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li>Implement the solution with pytorch and try improving the accuracy, sample data from all three sections (train, test and valid) and test the upper limit on the accuracy that can be achieved on</li>
@@ -873,8 +879,8 @@ this dataset
 </div>
 
 
-<div id="outline-container-org07a24fa" class="outline-2">
-<h2 id="org07a24fa"><span class="section-number-2">7</span> References</h2>
+<div id="outline-container-org06ebcf4" class="outline-2">
+<h2 id="org06ebcf4"><span class="section-number-2">7</span> References</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li>T4SA &#x2013; <a href="http://www.t4sa.it/">http://www.t4sa.it/</a></li>
@@ -889,7 +895,7 @@ Lucia Vadicamo, Fabio Carrara, Andrea Cimino, Stefano Cresci, Felice Dell'Orlett
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: tutysara</p>
-<p class="date">Created: 2018-06-30 Sat 20:44</p>
+<p class="date">Created: 2018-06-30 Sat 23:25</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

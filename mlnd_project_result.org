@@ -109,6 +109,9 @@
     | MobilenetV2-FT-A       |                                   1.78 |                    12.7 |
     | InceptionResnetV2-FT-F |                                   5.25 |                    10.5 |
     | InceptionResnetV2-FT-A |                                   5.26 |                    30.0 |
+     
+    #+ATTR_HTML: :style float:right;
+    [[./src/imgs/inference_time_comparision.png]]
       
     We see that MobilenetV2 has the quickest test time followed by InceptionResnetV2 and VGG19 models.
     If are looking for a model that is quick with acceptable accuracy MobilenetV2 model is the way to go.
