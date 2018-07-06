@@ -181,7 +181,7 @@ The more complex models didn't improved much on the accuracy. The MobilenetV2-FT
 The inceptionresnet based model did slightly worse, with InceptionResnetV2-FT-F getting 0.4727 and InceptionResnetV2-FT-A getting 0.5078.
 This is summarized in the following table and graph
    
-   Table 2 : Accuracy of models on T4SA test set
+    Table 2 : Accuracy of models on T4SA test set
    | Model                  | Accuracy |
    |------------------------|----------|
    | VGG19-FT-F             |   0.5042 |
@@ -231,7 +231,8 @@ We can see that the InceptionResnetV2 is the fastest to train. It converged quic
 We can also observe that models where all layers are trained converge quickly than training only fully connected layers
    
 Here is the table and graph of the result
-Table 4 : Training time of models with T4SA training data.
+
+     Table 4 : Training time of models with T4SA training data.
    | Model                  | Relative Training Time | Actual Training Time in hours |
    |------------------------|------------------------|-------------------------------|
    | VGG19-FT-F             |                  2.316 |                        178005 |
@@ -247,7 +248,8 @@ The inference time is calculated by running the models on a subset of twitter tr
 Inference time is calculated on the CPU since the models will be usually deployed on a webserver which has only CPU.
 
 Here is the table and graph of the result
-Table 5: Average Inference time of models on Twitter Test data
+
+       Table 5: Average Inference time of models on Twitter Test data.
     | Model                  | Average Inference Time (15 images) (S) | Standard Deviation (mS) |
     |------------------------|----------------------------------------|-------------------------|
     | VGG19-FT-F             |                                   10.4 |                    14.2 |
@@ -265,7 +267,8 @@ Here the memory usage and CPU usage of the models are compared against one anoth
 We use a relative comparision here since the actual numbers will depend on the actual hardware that is used and we are interested only the relative ease with which the models can be trained.
     
 Here is the table and graph for CPU usage
-Table 6: Average Relative CPU load while training on T4SA training data
+
+       Table 6: Average Relative CPU load while training on T4SA training data
     | Model                  | Average Relative Load |
     |------------------------|-----------------------|
     | VGG19-FT-F             |                   1.0 |
@@ -281,7 +284,8 @@ Table 6: Average Relative CPU load while training on T4SA training data
 We can see that InceptionResnetV2 models are high on CPU load while the MobilenetV2 has the least CPU load and the VGG19 models are inbetween.
 
 Here is the table and graph for vsize usage
-Table 7: Average Relative vsize while training on T4SA training data
+
+      Table 7: Average Relative vsize while training on T4SA training data
     | Model                  | Average Relative Memory Usage |
     |------------------------|-------------------------------|
     | VGG19-FT-F             |                         1.354 |
@@ -305,7 +309,8 @@ Smaller models are also preferred on mobile devices because of limited resources
 An app with a small apk size can be downloaded and used easily and can be updated frequently.
     
 Here is the table and graph for memory footprint
-Table 8: Memory footprint of models trained on T4SA training data
+
+      Table 8: Memory footprint of models trained on T4SA training data
     | Model                  | Size on disk in bytes |
     |------------------------|-----------------------|
     | VGG19-FT-F             |            1036656072 |
@@ -321,12 +326,6 @@ Table 8: Memory footprint of models trained on T4SA training data
 ## V. Conclusion
 
 ### Reflection
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
-
 We used the labeled data from the B-T4SA dataset to train our models ( VGG19-FT-F, VGG19-FT-A ).
 I was able to replicate the results from the experiment using the architecture described in the paper, these are set as baseline models.
 
@@ -367,13 +366,3 @@ this dataset
 - Create a mobile app, deploy the model in mobile and check the framerate achieved, try to extend to find sentiment of scene from camera based on framerate reached.
 
 -----------
-
-**Before submitting, ask yourself. . .**
-
-- Does the project report you’ve written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Analysis** and **Methodology**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your analysis, methods, and results?
-- Have you properly proof-read your project report to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
-- Is the code that implements your solution easily readable and properly commented?
-- Does the code execute without error and produce results similar to those reported?
