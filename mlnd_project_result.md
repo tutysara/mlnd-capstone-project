@@ -232,7 +232,8 @@ We can also observe that models where all layers are trained converge quickly th
    
 Here is the table and graph of the result
 
-     Table 4 : Training time of models with T4SA training data.
+    Table 4 : Training time of models with T4SA training data.
+
    | Model                  | Relative Training Time | Actual Training Time in hours |
    |------------------------|------------------------|-------------------------------|
    | VGG19-FT-F             |                  2.316 |                        178005 |
@@ -249,16 +250,18 @@ Inference time is calculated on the CPU since the models will be usually deploye
 
 Here is the table and graph of the result
 
-       Table 5: Average Inference time of models on Twitter Test data.
-    | Model                  | Average Inference Time (15 images) (S) | Standard Deviation (mS) |
-    |------------------------|----------------------------------------|-------------------------|
-    | VGG19-FT-F             |                                   10.4 |                    14.2 |
-    | VGG19-FT-A             |                                   10.4 |                    45.8 |
-    | MobilenetV2-FT-F       |                                   1.78 |                    22.5 |
-    | MobilenetV2-FT-A       |                                   1.78 |                    12.7 |
-    | InceptionResnetV2-FT-F |                                   5.25 |                    10.5 |
-    | InceptionResnetV2-FT-A |                                   5.26 |                    30.0 |
-      
+      Table 5: Average Inference time of models on Twitter Test data.
+    
+  | Model                  | Average Inference Time (15 images) (S) | Standard Deviation (mS) |
+  |------------------------|----------------------------------------|-------------------------|
+  | VGG19-FT-F             |                                   10.4 |                    14.2 |
+  | VGG19-FT-A             |                                   10.4 |                    45.8 |
+  | MobilenetV2-FT-F       |                                   1.78 |                    22.5 |
+  | MobilenetV2-FT-A       |                                   1.78 |                    12.7 |
+  | InceptionResnetV2-FT-F |                                   5.25 |                    10.5 |
+  | InceptionResnetV2-FT-A |                                   5.26 |                    30.0 |
+
+
 We see that MobilenetV2 has the quickest test time followed by InceptionResnetV2 and VGG19 models.
 If are looking for a model that is quick with acceptable accuracy MobilenetV2 model is the way to go.
 
@@ -268,15 +271,16 @@ We use a relative comparision here since the actual numbers will depend on the a
     
 Here is the table and graph for CPU usage
 
-       Table 6: Average Relative CPU load while training on T4SA training data
-    | Model                  | Average Relative Load |
-    |------------------------|-----------------------|
-    | VGG19-FT-F             |                   1.0 |
-    | VGG19-FT-A             |                 1.705 |
-    | MobilenetV2-FT-F       |                 1.124 |
-    | MobilenetV2-FT-A       |                 1.281 |
-    | InceptionResnetV2-FT-F |                 1.194 |
-    | InceptionResnetV2-FT-A |                 2.775 |
+      Table 6: Average Relative CPU load while training on T4SA training data
+
+  | Model                  | Average Relative Load |
+  |------------------------|-----------------------|
+  | VGG19-FT-F             |                   1.0 |
+  | VGG19-FT-A             |                 1.705 |
+  | MobilenetV2-FT-F       |                 1.124 |
+  | MobilenetV2-FT-A       |                 1.281 |
+  | InceptionResnetV2-FT-F |                 1.194 |
+  | InceptionResnetV2-FT-A |                 2.775 |
 
  
  ![](./src//imgs/training_cpu_usage_comparision.png)
@@ -286,14 +290,15 @@ We can see that InceptionResnetV2 models are high on CPU load while the Mobilene
 Here is the table and graph for vsize usage
 
       Table 7: Average Relative vsize while training on T4SA training data
-    | Model                  | Average Relative Memory Usage |
-    |------------------------|-------------------------------|
-    | VGG19-FT-F             |                         1.354 |
-    | VGG19-FT-A             |                         1.364 |
-    | MobilenetV2-FT-F       |                           1.0 |
-    | MobilenetV2-FT-A       |                         1.301 |
-    | InceptionResnetV2-FT-F |                          1.04 |
-    | InceptionResnetV2-FT-A |                         1.369 |
+
+  | Model                  | Average Relative Memory Usage |
+  |------------------------|-------------------------------|
+  | VGG19-FT-F             |                         1.354 |
+  | VGG19-FT-A             |                         1.364 |
+  | MobilenetV2-FT-F       |                           1.0 |
+  | MobilenetV2-FT-A       |                         1.301 |
+  | InceptionResnetV2-FT-F |                          1.04 |
+  | InceptionResnetV2-FT-A |                         1.369 |
 
     
 ![](./src/imgs/training_vsize_usage_comparision.png)
@@ -310,15 +315,16 @@ An app with a small apk size can be downloaded and used easily and can be update
     
 Here is the table and graph for memory footprint
 
-      Table 8: Memory footprint of models trained on T4SA training data
-    | Model                  | Size on disk in bytes |
-    |------------------------|-----------------------|
-    | VGG19-FT-F             |            1036656072 |
-    | VGG19-FT-A             |            1116766456 |
-    | MobilenetV2-FT-F       |              15544744 |
-    | MobilenetV2-FT-A       |              28407960 |
-    | InceptionResnetV2-FT-F |             219423224 |
-    | InceptionResnetV2-FT-A |             436709216 |
+     Table 8: Memory footprint of models trained on T4SA training data
+
+  | Model                  | Size on disk in bytes |
+  |------------------------|-----------------------|
+  | VGG19-FT-F             |            1036656072 |
+  | VGG19-FT-A             |            1116766456 |
+  | MobilenetV2-FT-F       |              15544744 |
+  | MobilenetV2-FT-A       |              28407960 |
+  | InceptionResnetV2-FT-F |             219423224 |
+  | InceptionResnetV2-FT-A |             436709216 |
     
   ![](./src/imgs/trained_model_memory_footprint_comparision.png)
 
