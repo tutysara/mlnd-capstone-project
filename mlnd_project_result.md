@@ -44,6 +44,28 @@ We also measure and compare the baseline models with the models based on Incepti
 - Average Relative Vsize when training on T4SA training data
 - Memory Footprint when trained on T4SA training data
 
+These metrics are choosen based on its property to differentiate a good model for use in webservers and mobile devices.
+These are also things that can be measured easily and accurately across many experiments with different models.
+
+The training time of the model is important because it determines how fast the new data can be put to use and the model can be improved.
+It also determines the need for additional resources and infrastructure required.
+If a model takes a long time to train then there may be a need to maintain a secondary copy of the model which is trained on the batch of new data, daily or weekly and swapped with the current model.
+If the model requires pushing and updating to many machines then decision has to be made on the timing of the update so, that it doesn't impact the network bandwidth in the organization.
+
+Average Inference time is a very important measure. It determines if a model is fit enough to be deployed for use by end user.
+A model having less average inference time feels snappy and gives a good experience to user. Slow models leads to long wait times and leads to user bouncing from the page if used on webpage.
+On mobile devices it gives poor framerate and produces jittery screens. So a low average inference time is preferred.
+
+The next two metrics, average relative CPU time and relative memory size are related to the resource usage of the models while training.
+It determines the resource required to train the models.
+A high requirement on capacity in turn leads to high capital investment.
+We prefer a model with low average relative CPU load and low average relative Vsize when training on T4SA dataset.
+
+Memory footprint of the trained model is also a very important metric. We want the models to be small in size. 
+Smaller models are easily loaded to memory when used in webservers. It is easy to scale horizantally and run in many containers due to smaller memory footprint.
+It is also easy to get them included in the apk when used on mobile devices.
+Users may not download a big mobile application and a smaller model is very important even to just get the user to start with.
+There are techniques to download the updated models without updating the application, but the mobile devices are in general tight on resources and the users prefer a small application.
 
 
 ## II. Analysis
@@ -62,6 +84,8 @@ N number of images are picked from the other two classes without replacement to 
 We finally have 156,862 images for each category with a total of 470,586 images.
 This is a balanced dataset which contains equal number of samples from each category (positive, negative and neutral).
 This data is split approximately into 80% for training, 10% for validation and 10% for testing.
+The images are of varying size since they are scraped from twitter.
+To make it easy to finetune models that are trained on imagenet data, the images are resized to 224X224 by squishing before they are used for training the models as part of preprocessing the images.
 
 ### Algorithms and Techniques
 
