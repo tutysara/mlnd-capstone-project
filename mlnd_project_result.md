@@ -84,16 +84,53 @@ N number of images are picked from the other two classes without replacement to 
 We finally have 156,862 images for each category with a total of 470,586 images.
 This is a balanced dataset which contains equal number of samples from each category (positive, negative and neutral).
 This data is split approximately into 80% for training, 10% for validation and 10% for testing.
-The images are of varying size since they are scraped from twitter.
-To make it easy to finetune models that are trained on imagenet data, the images are resized to 224X224 by squishing before they are used for training the models as part of preprocessing the images.
+The images are of varying dimensions since they were scraped from twitter.
+It has an average width of 945px with a standard deviation of 505px and average height of 916px with a standard deviation of 556px.
+The mean size is 142KB with a standard deviation of 156KB. There is a huge variation in image size.
+There are around 934 images which are greater than 1024KB and 72 images which are less that 1 KB.
+We also have few(757) grayscale images in the batch which may not be able to train the imagenet based models.
+We include all images including the greyscale, smaller(<1KB) and larger(>1024KB) images to training data to maintain it similar to the dataset used in the paper.
+To make it easy to finetune models that are trained on imagenet data, the images are resized to 224X224 by squishing as part of preprocessing the data before they are used for training the models.
+
+### Exploratory Visualization
+Here we have a summary of the image characteristic as plots. We plot a histogram of image height, width and size.
+Here are the plots we got
+
+![](./src/imgs/image_height_chart.png)
+![](./src/imgs/image_width_chart.png)
+![](./src/imgs/image_filesize_chart.png)
+
+We see the height and width curves are bell shaped and are normally distributed.
+Size chart is skewed to the left with many images in the <500KB range.
+
+Since we have a large number of data the outliers like the grayscale images and the small and large images shouldn't affect the result of the models in a significant manner.
 
 ### Algorithms and Techniques
 
 We will follow an approach as described in the T4SA paper to construct our solution.
 We will use a CNN model to classify the images.
+CNNs are made up of different arrangement of blocks which consist of
+a. Convolution Layer followed by
+b. Non-linearity (like ReLU) and
+c. Pooling Layer
+Convolution layer learns the spatial relation between pixels in images.
+Since convolution is a linear operation we use some non linear pixel wise operator like ReLU to introduce non linearity.
+Finally we use pooling layer to reduce the dimensionality of each feature map but retaining the most important information.
+
+This arrangement learns the filters on training which then extracts the features from the images.
+CNN learns filters that are hand engineered in traditional image classification algorithm.
+
+This is followed by few fully connected layers which learns the relationship between input and output and makes the classification.
+
 Training a deep CNN model from scratch is hard since we don’t have sufficient data to learn all filters.
-To solve this we use a pre trained model that is trained on imagenet data as our feature extractor and then fine tune on it using our data. We use two types of fine tuning.
-In one instance we lock all layers except FC and only fine tune the FC layers. In another instance we fine tune all layers with the new data.
+To solve this we use a pre trained model that is trained on imagenet data as our feature extractor and then fine tune on it using our data.
+We use two types of fine tuning.
+1. In one instance we lock all layers except FC and only fine tune the FC layers.
+The features which are got from frozen layer before the FC layers are called bottle neck features.
+In this method we extract the features of the image using the frozen layers and the FC layers is trained to learn the relation between the input and the output.
+2. In another instance we fine tune all layers with the new data. Here we attach the trained FC layer to the frozen layers and train all the layers with a low learning rate.
+This gives more freedom to our model to fit the input data. The learning rate is kept small to not introduce a big change and destroy the learned weights from imagenet.
+
 We will train all the model for 15 epochs, with EarlyStopping and a patience of 4.
 The original paper used caffe framework with a batch size of 32 and batch accumulation of 2. Our modles are implemented in keras and we use a batch size of 64 since we were able to accommodate it.
 We used a learning rate of 1e-3 as mentioned in the paper.
