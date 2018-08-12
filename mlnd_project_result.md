@@ -188,19 +188,23 @@ This gave fast read speed from disk and also avoided the computationally intensi
 
 
 ### Implementation
-The method given in the paper is followed to replicate its results.
+The method given in the paper is followed to replicate the results.
 The paper uses caffe, I did the experiment in Keras which was thought in the class.
 The VGG19 model in Keras is not similar to the caffe implementation. It was altered by adding l2 regularizers to all conv layers to support l2_weight decay similar to caffe.
 
 Two version of the VGG19 model are finetuned.
 In one instance all the layers are freezed except for the bottleneck layers and is called VGG19-FT-F.
 This is finetuned for 15 epochs using SGD with a lr rate of 1e-3.
+I had the patience set to 4, leaving it at the default value of 2 makes an premature early stoppage since the algorithm improves after a momentary degradation in loss for few epocs due to learning rate reduction. 
 The learning rate is reduced by a factor of 10 once every 5 epochs to stop divergence of result.
 A batch size of 64 is used while training, this is opposed to the batch size of 32 used in the paper.
-I found that they use batch accumulation of 2 to lower GPU footprint. So, in effect it is equivalent to using a batch size of 64. My GPU could handle a batch size of 64 and I didn’t had to make use of special techniques like batch accumulation to fit it in memory.
+In the paper they use batch accumulation of 2 to lower GPU footprint. So, in effect it is equivalent to using a batch size of 64. My GPU could handle a batch size of 64 and I didn’t had to make use of special techniques like batch accumulation to fit it in memory.
+
 
 In the second instance all layers of the model are finetuned and this is called VGG19-FT-A.
 This is also trained for 15 epochs using SGD with a lr of 1e-3. The batch size was however reduced to 48 to fit the model in memory.
+Higher values of batch sizes couldn't be accommodated since it overflows the GPU memory due to large number of params in tuning all layers.
+All others hyper params are used as per the values from the paper since we want to try and replicate the results from the paper and want to stay as close to it as possible in our implementation.
 
 The code to train the models are located in the src folder, inside the directory named after the models src/{vgg19, mobilenet and inceptionresnetv2}
 
@@ -218,12 +222,20 @@ The logs are saved in the logs directory located at src/{vgg19, mobilenet and in
 The result of the script, trained model and result array are saved in the saved_models directory located at src/{vgg19, mobilenet and inceptionresnetv2}/saved_models.
 
 The test script uses the models produced by the training scripts and the test script should be run only after running the train script atleast once to completion.
+All scripts are designed to be run all alone in a GPU, we cannot run more than one at any given time in a GPU with <=8GB of memory due to the memory requirements of the model and training setup.
 
 
 
 ### Refinement
 I run the models frequently to test different set of values for parameters such as batch_size, momentum , learning rate etc to try improve on the accuracy and other metrics.
 Running the model on the entire T4SA training data is a time and resource intensive process. I modified the scripts to make it easy to experiment with subsets of data.
+
+Our goal here is to follow the paper as closely as possible and replicate its results so, the params in the paper are used.
+I did few experiments which are shallow sanity test to find any low hanging improvements to the model params.
+I tried to train faster by using a higher learning rates of 1, le-1, 1e-2, in all these cases the model didn't converged and it diverged due to not finding the minima.
+I used other optimizers like Adam and RMSProp, it performed well and got better score on the training loss and training accuracy but didn't performed well on the test data.
+Decreasing the batch size to less than 32 caused the models to diverge with the setting of lr=1e-3 and SGD optimizer, increasing it to 128 didn't made any improvement in the result.
+All these experiments were done on a smaller dataset containing 5% of data to be able to complete in a reasonable time.
 
 To experiment with subset of the data, all scripts has a ```percent``` flag. This flag controls the percentage of input data that is used in the training process.
 It also adjust the output files based on the ```percent``` flag.
@@ -255,7 +267,10 @@ This is summarized in the following table and graph
 Here is the graph of the result
    ![](./src/imgs/accuracy_t4sa_testset.png)
    
-The accuracies of the models on the Twitter Training Dataset is also measured.
+In addition to comparing the models with the test data in B-T4SA dataset it is also tested against the standard Twitter testing dataset to check its robustness.
+The Twitter testing dataset(Deepsent) contains 1269 images with positive and negative sentiment and it is used to compare CNN models.
+The performance of our models against Twitter testing dataset will be a good indicator of real world performance.
+
 Here we can see that the more complex models like InceptionResnetV2-FT-A gives a better performance compared to less complex models like  VGG19-FT-A and MobilenetV2-FT-A.
 We can also observe that the model fine tuned on all layers were able to catch the patterns in the data better compared to the models that are finetuned only on the fully connected layers
 The results are summarized in the following table and graph
@@ -274,6 +289,7 @@ The results are summarized in the following table and graph
 
  ![](./src/imgs/accuracy_twitter_training_dataset.png)
    
+We see that all our models performs well on the Twitter testing dataset, with the InceptionResnetV2-FT-A topping the accuracy chart and MobilenetV2-FT-A giving reasonable results.
 
 ### Justification
 We were able to achieve comparable accuracy to the results stated in the paper.
