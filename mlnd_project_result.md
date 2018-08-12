@@ -110,9 +110,11 @@ Since we have a large number of data the outliers like the grayscale images and 
 We will follow an approach as described in the T4SA paper to construct our solution.
 We will use a CNN model to classify the images.
 CNNs are made up of different arrangement of blocks which consist of
+
 a. Convolution Layer followed by
 b. Non-linearity (like ReLU) and
 c. Pooling Layer
+
 Convolution layer learns the spatial relation between pixels in images.
 Since convolution is a linear operation we use some non linear pixel wise operator like ReLU to introduce non linearity.
 Finally we use pooling layer to reduce the dimensionality of each feature map but retaining the most important information.
